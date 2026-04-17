@@ -45,14 +45,6 @@ docker run -e "ACCEPT_EULA=Y" `
 
 Exemple avec sqlcmd:
 
-<!-- ```bash
-docker exec -it sqlserver-solaire /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "admin@12345" -C -Q "IF DB_ID('solaire_db') IS NULL CREATE DATABASE solaire_db;"
-docker cp database/table_sqlserver.sql sqlserver-solaire:/tmp/table_sqlserver.sql
-docker exec -it sqlserver-solaire /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "admin@12345" -C -d solaire_db -i /tmp/table_sqlserver.sql
-docker cp database/data.sql sqlserver-solaire:/tmp/data.sql
-docker exec -it sqlserver-solaire /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "admin@12345" -C -d solaire_db -i /tmp/data.sql
-``` -->
-
 # ✅ Vérifier qu’il tourne
 ```bash
 docker ps
