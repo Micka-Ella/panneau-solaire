@@ -23,10 +23,10 @@ Le resultat n'est pas stocke en base. Seules les entrees sont stockees.
 ```bash
 docker pull mcr.microsoft.com/mssql/server:2022-latest
 
-docker run -e "ACCEPT_EULA=Y" \
-  -e "MSSQL_SA_PASSWORD=admin@12345" \
-  -p 1433:1433 \
-  --name sqlserver-solaire \
+docker run -e "ACCEPT_EULA=Y" `
+  -e "MSSQL_SA_PASSWORD=admin@12345" `
+  -p 1433:1433 `
+  --name sqlserver-solaire `
   -d mcr.microsoft.com/mssql/server:2022-latest
 ```
 
@@ -45,22 +45,48 @@ docker run -e "ACCEPT_EULA=Y" \
 
 Exemple avec sqlcmd:
 
-```bash
+<!-- ```bash
 docker exec -it sqlserver-solaire /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "admin@12345" -C -Q "IF DB_ID('solaire_db') IS NULL CREATE DATABASE solaire_db;"
 docker cp database/table_sqlserver.sql sqlserver-solaire:/tmp/table_sqlserver.sql
 docker exec -it sqlserver-solaire /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "admin@12345" -C -d solaire_db -i /tmp/table_sqlserver.sql
 docker cp database/data.sql sqlserver-solaire:/tmp/data.sql
 docker exec -it sqlserver-solaire /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "admin@12345" -C -d solaire_db -i /tmp/data.sql
+``` -->
+
+# ✅ Vérifier qu’il tourne
+```bash
+docker ps
 ```
+- Tu dois voir sqlserver-solaire
+
+# ✅ Créer la base
+```bash
+docker exec -it sqlserver-solaire /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "admin@12345" -C -Q "IF DB_ID('solaire_db') IS NULL CREATE DATABASE solaire_db;"
+```
+
+# ✅ Copier les fichiers SQL
+```bash
+docker cp .\database\table_sqlserver.sql sqlserver-solaire:/tmp/table_sqlserver.sql
+docker cp .\database\data.sql sqlserver-solaire:/tmp/data.sql
+```
+
+# ✅ Exécuter scripts SQL
+```bash
+docker exec -it sqlserver-solaire /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "admin@12345" -C -d solaire_db -i /tmp/table_sqlserver.sql
+
+docker exec -it sqlserver-solaire /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "admin@12345" -C -d solaire_db -i /tmp/data.sql
+```
+
+
 
 ---
 
 ## 3. Installer Python
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install --upgrade pip
+python -m venv .venv
+.\.venv\Scripts\Activate
+python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
@@ -69,7 +95,7 @@ pip install -r requirements.txt
 ## 4. Lancer l'application
 
 ```bash
-.venv/bin/python src/app_tkinter.py
+.\.venv\Scripts\python.exe .\src\app_tkinter.py
 ```
 
 Aucune page de connexion n'est affichee dans l'UI.
