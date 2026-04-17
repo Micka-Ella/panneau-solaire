@@ -9,6 +9,7 @@ class RepositorySqlServer:
     def __init__(self):
         self.serveur = os.getenv("DB_SERVER", "localhost")
         self.port = os.getenv("DB_PORT", "1433")
+        self.ports_fallback = os.getenv("DB_PORTS", "1433,11433")
         self.base = os.getenv("DB_NAME", "solaire_db")
         self.utilisateur = os.getenv("DB_USER", "sa")
         self.mot_de_passe = os.getenv("DB_PASSWORD", "admin@12345")
@@ -30,20 +31,43 @@ class RepositorySqlServer:
 
         raise RuntimeError("Aucun driver ODBC SQL Server detecte")
 
-    def _chaine_connexion(self, base: str) -> str:
+    def _chaine_connexion(self, base: str, port: str) -> str:
         driver = self._driver_sql_server()
         return (
             f"DRIVER={{{driver}}};"
-            f"SERVER={self.serveur},{self.port};"
+            f"SERVER={self.serveur},{port};"
             f"DATABASE={base};"
             f"UID={self.utilisateur};"
             f"PWD={self.mot_de_passe};"
             "Encrypt=no;TrustServerCertificate=yes;"
         )
 
+    def _ports_a_tester(self) -> list[str]:
+        candidats: list[str] = []
+
+        if self.port and self.port.strip():
+            candidats.append(self.port.strip())
+
+        for p in self.ports_fallback.split(","):
+            p = p.strip()
+            if p and p not in candidats:
+                candidats.append(p)
+
+        return candidats or ["1433"]
+
     def connecter(self):
-        self.cnxn = pyodbc.connect(self._chaine_connexion(self.base), timeout=5)
-        self.cnxn.autocommit = False
+        derniere_erreur: Exception | None = None
+
+        for port in self._ports_a_tester():
+            try:
+                self.cnxn = pyodbc.connect(self._chaine_connexion(self.base, port), timeout=5)
+                self.cnxn.autocommit = False
+                return
+            except Exception as exc:
+                derniere_erreur = exc
+
+        if derniere_erreur is not None:
+            raise derniere_erreur
 
     def fermer(self):
         if self.cnxn is not None:
