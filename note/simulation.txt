@@ -1,0 +1,68 @@
+1. Exemple d'entrées
+    Appareils :
+     Télévision : 100W — 3h — Nuit
+     Frigo : 200W — 24h/jour (Matin: 11h, Soir: 2h, Nuit: 11h)
+     Lumières : 50W — 2h — Soir  [CORRIGÉ : soir = 17h–19h = 2h max, pas 5h]
+     Ordinateur : 150W — 4h — Matin
+
+2. Répartition tranches
+    Matin (06h–17h = 11h)
+     Frigo : 200W × 11h = 2200 Wh
+     Ordinateur : 150W × 4h = 600 Wh
+
+     Total énergie matin = 2800 Wh
+     Puissance simultanée matin = 200 + 150 = 350 W
+
+    Soir (17h–19h = 2h)
+     Frigo : 200W × 2h = 400 Wh
+     Lumières : 50W × 2h = 100 Wh
+
+     Total énergie soir = 500 Wh
+     Puissance simultanée soir = 200 + 50 = 250 W
+
+     [CORRIGÉ] Le coefficient 50% s'applique à la PRODUCTION du panneau,
+     pas à la consommation. La consommation reste 500 Wh.
+     C'est le panneau qui doit produire davantage pour compenser sa
+     puissance réduite (utilisé dans le calcul P2 ci-dessous).
+
+    Nuit (19h–06h = 11h)
+     Frigo : 200W × 11h = 2200 Wh
+     Télévision : 100W × 3h = 300 Wh
+
+     Total énergie nuit = 2500 Wh
+
+3. Total énergie
+    Matin : 2800 Wh
+    Soir   :  500 Wh
+    Nuit   : 2500 Wh
+
+    TOTAL = 5800 Wh
+
+4. Dimensionnement batterie
+    [CORRIGÉ] La batterie couvre UNIQUEMENT la nuit (règle métier).
+    Le soir est alimenté par le panneau (puissance réduite), pas la batterie.
+
+    Batterie = Energie_nuit × 1.5
+    Batterie = 2500 × 1.5 = 3750 Wh = 3.75 kWh
+
+5. Dimensionnement solaire
+    [CORRIGÉ] On calcule 3 contraintes séparées sur les PUISSANCES,
+    pas en divisant l'énergie totale par le rendement.
+
+    P1 (couvrir charge matin) :
+     P1 = Puissance_matin / rendement
+     P1 = 350 / 0.4 = 875 W
+
+    P2 (couvrir charge soir, panneau réduit) :
+     P2 = Puissance_soir / (rendement × coef_soir)
+     P2 = 250 / (0.4 × 0.5) = 250 / 0.2 = 1250 W
+
+    P3 (recharger la batterie avant 17h, durée dispo = 11h) :
+     Puissance_recharge = Energie_nuit / 11h = 2500 / 11 ≈ 227.3 W
+     P3 = Puissance_recharge / rendement = 227.3 / 0.4 ≈ 568 W
+
+    Puissance_panneau = max(P1, P2, P3) = max(875, 1250, 568) = 1250 W
+
+6. Résultat final
+    Panneau solaire recommandé : 1250 W
+    Batterie recommandée       : 3750 Wh  (3.75 kWh)
